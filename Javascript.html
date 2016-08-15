@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Thank you !</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+
+    <script type="text/javascript">
+
+var app = angular.module("TestTime", []);
+app.filter("reverse", function() {
+return function(input) {
+var result = "";
+input = input || "";
+for (var i=0; i<input.length; i++) {
+result = input.charAt(i) + result;
+}
+return result;
+};
+});
+//I would seperate this out but as per request you wanted it in one file...
+app.controller("JavaScriptCtrl", [function () {
+ var vm = this;
+
+ vm.showCount = 0;
+ vm.getPrimeCount = function (primeNumber){
+    var sieve = [], i, j, primes = [];
+    var getCount = 0;
+    for (i = 2; i <= primeNumber; ++i) {
+        if (!sieve[i]) {
+            // i has not been marked -- it is prime
+            //primes.push(i);
+            getCount++;
+            for (j = i << 1; j <= primeNumber; j += i) {
+                sieve[j] = true;
+            }
+        }
+    }
+    vm.showCount = getCount;
+}
+
+ vm.OrderByNSq = function(a,b){
+            vm.firstResult = '';
+            var ret = "";
+for (var i=0; i < a.length; i++) { 
+
+             for (var j=0; j < b.length; j++) { 
+                {
+                    if (a.charAt(i) == b.charAt(i))
+                    {
+                        if (ret.indexOf(b) == -1)
+                            ret += b;
+                        break;
+                    }
+                }
+            
+             }
+           vm.firstResult = ret;
+  }
+}
+
+vm.OrderByN = function(a,b)
+        {
+            var ret = "";
+            var flags =  [256];
+
+for (var i=0; i < b.length; i++) { 
+           
+                flags[b] = 1;
+}
+           for (var i=0; i < a.length; i++){
+                if (flags[a] == 1)
+                {
+                    ret += a;
+                    flags[a] = 0;
+                }
+           }
+             vm.thirdQuestion = ret;
+        }
+}]);
+</script>
+
+</head>
+
+<body ng-app="TestTime" ng-controller="JavaScriptCtrl as vm">
+    <input type="text" ng-model="vm.questionOne" placeholder="Enter your inputs here..." />
+    <p>Input Value : {{ vm.questionOne }}</p>
+    <p>Filtered Value : {{ vm.questionOne | reverse }}</p>
+    <input type="text" ng-model="vm.questionTwo" ng-change="vm.getPrimeCount(vm.questionTwo)" placeholder="Enter your Prime number here..."
+    />
+    <p>{{vm.showCount}}</p>
+    <hr>
+    <input type="text" ng-model="vm.firstWord" placeholder="Enter your first word here..." />
+    <input type="text" ng-model="vm.secondWord" ng-if="vm.firstWord.length > 1" required ng-change="vm.OrderByNSq(vm.firstWord,vm.secondWord)"
+        placeholder="Enter your second word here..." />
+    <p>The first part to the third question :{{vm.firstResult}}</p>
+    <hr>
+    <input type="text" ng-model="vm.thirdWord" placeholder="Enter your first word here..." />
+    <input type="text" ng-model="vm.fourthWord" ng-if="vm.thirdWord.length > 1" required ng-change="vm.OrderByN(vm.thirdWord,vm.fourthWord)"
+        placeholder="Enter your second word here..." />
+    <p>The second part of the third question : {{vm.thirdQuestion}}
+</body>
+
+</html>
